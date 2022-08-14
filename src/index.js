@@ -11,34 +11,33 @@ const countryInfo = document.querySelector('.country-info')
 const DEBOUNCE_DELAY = 300;
 
 function renderInfo(countries) {
-    const markupInfo = countries
-      .map((country) => {
-        return `<p><img src${flags.svg}></p>
-            <li>
+    let markupInfo = countries
+      .map(country => {
+        return `<p style = 'font-size: 35px; display:flex; text-align:inline; '><img src=${country.flags.svg} width = 50px, hight = 120px; ><b style = "margin-left: 5px";> ${country.name.official}</b></p>
+
+                <li><p style = 'font-size: 30px'><b>Capital</b>: ${country.capital}</p></li>
               
-              <p><b>Capital</b>: ${country.capital}</p>
-              <p><b>Population</b>: ${country.population}</p>
-              <p><b>Languages</b>: ${country.languages}</p>
-            </li>
-        `;
+              
+                <li><p style = 'font-size: 30px'><b>Population</b>: ${country.population}</p></li>
+                <li><p style = 'font-size: 30px'><b>Languages</b>: ${Object.values(country.languages)}</p></li>`;
       })
       .join("");
-    userList.innerHTML = markupInfo;
+      countryInfo.innerHTML = markupInfo;
   }
 
 
   function renderList(countries) {
-    const markupList = countries
-      .map((country) => {
+    let markupList = countries
+      .map(country => {
         return `
             <li>
-              <img src${flags.svg}><p><b>Name</b>: ${user.name}</p>
+            <p style = 'font-size: 25px; display:flex; text-align:inline'><img src=${country.flags.svg} width = 40px, hight = 100px;><b style = "margin-left: 5px">Name</b>: ${country.name.official}</p>
               
             </li>
         `;
       })
       .join("");
-    userList.innerHTML = markupList;
+      countryList.innerHTML = markupList;
   }
 
 
@@ -57,20 +56,22 @@ return fetchCountries(trimmed)
 .then(countries => { 
   if (countries.length > 10) {
     
-    Notiflix.Notify.info("Too many matches found. Please enter a more specific name.")
+    Notiflix.Notify.info("Too many matches found. Please enter a more specific name.", {width: "350px", timeout: 1500})
     
+        countryList.innerHTML = '';
+        countryInfo.innerHTML = '';
   }
 
 if (countries.length <= 10 && countries.length >=2) {
-
-        renderList(countries)
-        countryList.innerHTML = '';
+        
         countryInfo.innerHTML = '';
+        renderList(countries)
+        
 
 } if (countries.length === 1) {
-
+  countryList.innerHTML = '';
   renderInfo(countries)
-  countryInfo.innerHTML = '';
+  
 } 
 
     
@@ -78,7 +79,8 @@ if (countries.length <= 10 && countries.length >=2) {
 .catch(error => {
 countryList.innerHTML = ''
 countryInfo.innerHTML = ''
-Notiflix.Notify.failure("Oops, there is no country with that name")
+Notiflix.Notify.failure("Oops, there is no country with that name", {width: "350px", timeout: 1500})
+
   })
 
   },DEBOUNCE_DELAY)   
