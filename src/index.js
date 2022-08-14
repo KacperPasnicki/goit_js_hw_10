@@ -5,8 +5,9 @@ import debounce from 'lodash.debounce';
 const searchBox = document.querySelector('input')
 const countryList = document.querySelector('.country-list')
 const countryInfo = document.querySelector('.country-info')
+const body = document.querySelector('body')
 
-
+body.style.backgroundColor = '#e0b589'
 
 const DEBOUNCE_DELAY = 300;
 
@@ -64,14 +65,14 @@ return fetchCountries(trimmed)
 
 if (countries.length <= 10 && countries.length >=2) {
         
-        countryInfo.innerHTML = '';
-        renderList(countries)
         
+        renderList(countries)
+        countryInfo.innerHTML = '';
 
 } if (countries.length === 1) {
-  countryList.innerHTML = '';
-  renderInfo(countries)
   
+  renderInfo(countries)
+  countryList.innerHTML = '';
 } 
 
     
