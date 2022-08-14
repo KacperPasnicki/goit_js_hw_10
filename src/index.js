@@ -1,7 +1,8 @@
 import './css/styles.css';
 import { fetchCountries } from './fetchCountries'
 import Notiflix from 'notiflix';
-const searchBox = document.querySelector('input.text')
+import debounce from 'lodash.debounce';
+const searchBox = document.querySelector('input')
 const countryList = document.querySelector('.country-list')
 const countryInfo = document.querySelector('.country-info')
 
@@ -12,9 +13,9 @@ const DEBOUNCE_DELAY = 300;
 function renderInfo(countries) {
     const markupInfo = countries
       .map((country) => {
-        return `
+        return `<p><img src${flags.svg}></p>
             <li>
-                <img src${flags.svg}>
+              
               <p><b>Capital</b>: ${country.capital}</p>
               <p><b>Population</b>: ${country.population}</p>
               <p><b>Languages</b>: ${country.languages}</p>
@@ -43,16 +44,46 @@ function renderInfo(countries) {
 
 
 
-// const searchEngine = e => {
-// const text = e.target.value.toLowerCase()
-  
 
-// }
 
-searchBox.addEventListener('debounce', e => {
-let trimmed = searchhbox.value.trim()
-
+searchBox.addEventListener('input', debounce(e => {
+let trimmed = searchBox.value.trim() 
+    if (trimmed === '')  {
+        countryList.innerHTML = '';
+        countryInfo.innerHTML = '';
+        return;
 }
+return fetchCountries(trimmed) 
+.then(countries => { 
+  if (countries.length > 10) {
+    
+    Notiflix.Notify.info("Too many matches found. Please enter a more specific name.")
+    
+  }
 
+if (countries.length <= 10 && countries.length >=2) {
 
+        renderList(countries)
+        countryList.innerHTML = '';
+        countryInfo.innerHTML = '';
+
+} if (countries.length === 1) {
+
+  renderInfo(countries)
+  countryInfo.innerHTML = '';
+} 
+
+    
+} )
+.catch(error => {
+countryList.innerHTML = ''
+countryInfo.innerHTML = ''
+Notiflix.Notify.failure("Oops, there is no country with that name")
+  })
+
+  },DEBOUNCE_DELAY)   
 )
+
+
+
+
